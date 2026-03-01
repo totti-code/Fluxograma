@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fluxograma | Troca / Avaria / Perda</title>
+  <title>Fluxograma | Troca | Avaria | Perda</title>
 
   <style>
     :root{
@@ -34,7 +34,6 @@
     h1{
       margin:0 0 6px;
       font-size: clamp(22px, 2.5vw, 34px);
-      letter-spacing: .2px;
     }
     p{
       margin:0;
@@ -53,7 +52,6 @@
       border:1px solid var(--line);
       border-radius:18px;
       padding:16px;
-      overflow:hidden;
     }
     .row{
       display:flex;
@@ -77,19 +75,10 @@
     .dot{
       width:10px; height:10px; border-radius:50%;
       background: var(--accent);
-      box-shadow: 0 0 18px rgba(76,201,240,.55);
     }
     .dot.warn{
       background: var(--accent2);
-      box-shadow: 0 0 18px rgba(255,183,3,.45);
     }
-    .hint{
-      margin-top:8px;
-      font-size:13px;
-      color:var(--muted);
-    }
-
-    /* Mermaid container */
     .mermaid-wrap{
       margin-top:8px;
       border:1px dashed rgba(167,183,214,.25);
@@ -97,138 +86,120 @@
       padding:12px;
       background: rgba(10,16,30,.35);
     }
-
-    /* Improve mermaid SVG sizing on mobile */
     .mermaid svg{
       max-width:100% !important;
       height:auto !important;
     }
-
-    footer{
-      max-width:1100px;
-      margin:0 auto;
-      padding:0 18px 28px;
-      color:var(--muted);
-      font-size:13px;
-    }
-    a{ color: var(--accent); text-decoration:none; }
-    a:hover{ text-decoration:underline; }
   </style>
 
-  <!-- Mermaid (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
 
 <body>
-  <header>
-    <h1>Fluxograma — Troca de Mercadoria (Vencida / Avariada / Perda)</h1>
-    <p>Modelo para supermercado: registro em estoque avaria, decisão de troca com fornecedor, nota de devolução e descarte.</p>
-  </header>
 
-  <main>
-    <section class="card">
-      <div class="row">
-        <div class="badge"><span class="dot"></span> Fluxo Geral</div>
-        <div class="badge"><span class="dot warn"></span> Decisões: “Fornecedor aceita troca?”</div>
-      </div>
+<header>
+  <h1>Fluxograma — Troca de Mercadoria</h1>
+  <p>Processo de produto vencido, avariado ou perda.</p>
+</header>
 
-      <div class="mermaid-wrap">
-        <div class="mermaid">
+<main>
+
+<section class="card">
+<div class="row">
+<div class="badge"><span class="dot"></span> Fluxo Geral</div>
+<div class="badge"><span class="dot warn"></span> Decisão fornecedor</div>
+</div>
+
+<div class="mermaid-wrap">
+<div class="mermaid">
 flowchart TD
-  A([INÍCIO]) --> B[Produto identificado como problema]
-  B --> C{Qual o tipo?}
-  C -->|Vencido| D[Ir para Fluxo: Produto Vencido]
-  C -->|Avariado| E[Ir para Fluxo: Produto Avariado]
-  C -->|Perda / Lixo| F[Ir para Fluxo: Perda / Lixo]
-  D --> Z([FIM])
-  E --> Z
-  F --> Z
-        </div>
-      </div>
+A([Inicio]) --> B[Produto identificado com problema]
+B --> C{Qual o tipo}
+C -->|Vencido| D[Ir para fluxo vencido]
+C -->|Avariado| E[Ir para fluxo avariado]
+C -->|Perda| F[Ir para fluxo perda]
+D --> Z([Fim])
+E --> Z
+F --> Z
+</div>
+</div>
+</section>
 
-      <p class="hint">Você pode editar o texto dentro do bloco <b>flowchart</b> para adaptar ao processo da sua empresa.</p>
-    </section>
+<section class="card">
+<div class="row">
+<div class="badge"><span class="dot"></span> Fluxo Produto Vencido</div>
+</div>
 
-    <section class="card">
-      <div class="row">
-        <div class="badge"><span class="dot"></span> Fluxo 1 — Produto Vencido</div>
-      </div>
-
-      <div class="mermaid-wrap">
-        <div class="mermaid">
+<div class="mermaid-wrap">
+<div class="mermaid">
 flowchart TD
-  A([INÍCIO]) --> B[Produto vencido identificado]
-  B --> C[Registrar no sistema / separar em Estoque Avaria]
-  C --> D{Fornecedor aceita troca?}
+A([Inicio]) --> B[Produto vencido identificado]
+B --> C[Registrar no sistema e separar estoque avaria]
+C --> D{Fornecedor aceita troca}
 
-  D -->|Sim| E[Emitir Nota de Devolução]
-  E --> F[Enviar relatório / confirmação ao fornecedor]
-  F --> G[Receber produto novo (troca)]
-  G --> H[Lançar entrada (Centro de custo Prod/Prod)]
-  H --> Z([FIM])
+D -->|Sim| E[Emitir nota devolucao]
+E --> F[Enviar relatorio fornecedor]
+F --> G[Receber produto novo]
+G --> H[Lancar entrada centro custo]
+H --> Z([Fim])
 
-  D -->|Não| I[Lançar como perda (Centro de custo Troca Vencido)]
-  I --> J[Descartar corretamente conforme política]
-  J --> Z
-        </div>
-      </div>
-    </section>
+D -->|Nao| I[Lancar como perda centro custo]
+I --> J[Descartar conforme politica]
+J --> Z
+</div>
+</div>
+</section>
 
-    <section class="card">
-      <div class="row">
-        <div class="badge"><span class="dot"></span> Fluxo 2 — Produto Avariado</div>
-      </div>
+<section class="card">
+<div class="row">
+<div class="badge"><span class="dot"></span> Fluxo Produto Avariado</div>
+</div>
 
-      <div class="mermaid-wrap">
-        <div class="mermaid">
+<div class="mermaid-wrap">
+<div class="mermaid">
 flowchart TD
-  A([INÍCIO]) --> B[Produto avariado identificado]
-  B --> C[Registrar no sistema / separar em Estoque Avaria]
-  C --> D{Fornecedor aceita troca?}
+A([Inicio]) --> B[Produto avariado identificado]
+B --> C[Registrar no sistema e separar estoque avaria]
+C --> D{Fornecedor aceita troca}
 
-  D -->|Sim| E[Emitir Nota de Devolução]
-  E --> F[Enviar relatório / confirmação ao fornecedor]
-  F --> G[Receber produto novo (troca)]
-  G --> H[Lançar entrada (Centro de custo Prod/Prod)]
-  H --> Z([FIM])
+D -->|Sim| E[Emitir nota devolucao]
+E --> F[Enviar relatorio fornecedor]
+F --> G[Receber produto novo]
+G --> H[Lancar entrada centro custo]
+H --> Z([Fim])
 
-  D -->|Não| I[Lançar em Centro de custo Troca Avariado]
-  I --> J[Descartar corretamente conforme política]
-  J --> Z
-        </div>
-      </div>
-    </section>
+D -->|Nao| I[Lancar perda centro custo]
+I --> J[Descartar conforme politica]
+J --> Z
+</div>
+</div>
+</section>
 
-    <section class="card">
-      <div class="row">
-        <div class="badge"><span class="dot"></span> Fluxo 3 — Perda / Lixo</div>
-      </div>
+<section class="card">
+<div class="row">
+<div class="badge"><span class="dot"></span> Fluxo Perda</div>
+</div>
 
-      <div class="mermaid-wrap">
-        <div class="mermaid">
+<div class="mermaid-wrap">
+<div class="mermaid">
 flowchart TD
-  A([INÍCIO]) --> B[Identificação da perda / lixo]
-  B --> C[Registrar motivo (ex.: vazamento, contaminação, queda, aberto)]
-  C --> D[Lançar no centro de custo Perda/Lixo]
-  D --> E[Descartar corretamente conforme política (coleta, segregação, etc.)]
-  E --> Z([FIM])
-        </div>
-      </div>
+A([Inicio]) --> B[Identificacao perda]
+B --> C[Registrar motivo vazamento contaminacao queda]
+C --> D[Lancar centro custo perda]
+D --> E[Descartar conforme politica]
+E --> Z([Fim])
+</div>
+</div>
+</section>
 
-      <p class="hint">Dica: se sua empresa exige aprovação do responsável antes do descarte, eu adiciono um losango “Aprovado?” aqui.</p>
-    </section>
-  </main>
+</main>
 
-  <footer>
-    Feito para GitHub Pages (HTML + Mermaid). Se quiser, eu adapto com os nomes exatos do seu ERP (CPD, centros de custo, responsáveis, etapas).
-  </footer>
+<script>
+mermaid.initialize({
+startOnLoad: true,
+theme: "dark"
+});
+</script>
 
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: "dark",
-      flowchart: { curve: "basis" }
-    });
-  </script>
 </body>
 </html>
