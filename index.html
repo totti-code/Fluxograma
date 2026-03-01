@@ -1,241 +1,197 @@
 <!doctype html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fluxograma | Troca | Avaria | Perda</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fluxograma | Troca | Avaria | Perda</title>
 
-  <style>
-    :root{
-      --bg:#0b1220;
-      --card:#111a2e;
-      --line:#22304f;
-      --text:#eaf2ff;
-      --muted:#a7b7d6;
-      --accent:#4cc9f0;
-      --accent2:#ffb703;
-    }
+<style>
+:root{
+  --bg:#0b1220;
+  --card:#111a2e;
+  --line:#22304f;
+  --text:#eaf2ff;
+  --muted:#a7b7d6;
+  --accent:#4cc9f0;
+}
 
-    *{ box-sizing:border-box; }
+*{ box-sizing:border-box; }
 
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(900px 500px at 15% 0%, rgba(76,201,240,0.16), transparent 60%),
-        radial-gradient(800px 450px at 85% 15%, rgba(255,183,3,0.10), transparent 60%),
-        var(--bg);
-      color:var(--text);
-      min-height:100vh;
-    }
+body{
+  margin:0;
+  font-family: system-ui, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
 
-    /* ====== MAIS COMPACTO ====== */
-    header{
-      padding:16px 14px 6px;   /* ↓ menor */
-      max-width:1100px;
-      margin:0 auto;
-    }
-    h1{
-      margin:0 0 4px;
-      font-size: clamp(18px, 2vw, 24px); /* ↓ menor */
-      line-height:1.15;
-    }
-    p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.35;
-      font-size:13px; /* ↓ menor */
-    }
+header{
+  padding:10px 12px 4px;
+  max-width:1200px;
+  margin:auto;
+}
 
-    main{
-      max-width:1100px;
-      margin:0 auto;
-      padding:10px 14px 18px; /* ↓ menor */
-      display:grid;
-      gap:10px; /* ↓ menor */
-    }
+h1{
+  margin:0;
+  font-size:18px; /* bem menor */
+}
 
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
-      border:1px solid var(--line);
-      border-radius:14px; /* ↓ */
-      padding:12px; /* ↓ */
-    }
+p{
+  margin:2px 0 0;
+  font-size:11px;
+  color:var(--muted);
+}
 
-    .row{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:8px; /* ↓ */
-    }
+main{
+  max-width:1200px;
+  margin:auto;
+  padding:6px 12px 12px;
+  display:grid;
+  gap:6px;
+}
 
-    .badge{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding:6px 9px; /* ↓ */
-      border-radius:999px;
-      border:1px solid var(--line);
-      color:var(--muted);
-      font-size:12px; /* ↓ */
-      background: rgba(17,26,46,.55);
-      line-height:1;
-    }
+.card{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:6px; /* mínimo */
+}
 
-    .dot{
-      width:9px; height:9px; border-radius:50%;
-      background: var(--accent);
-    }
-    .dot.warn{ background: var(--accent2); }
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:4px;
+}
 
-    .mermaid-wrap{
-      margin-top:6px; /* ↓ */
-      border:1px dashed rgba(167,183,214,.22);
-      border-radius:12px; /* ↓ */
-      padding:8px; /* ↓ */
-      background: rgba(10,16,30,.35);
-    }
+.badge{
+  font-size:10px;
+  padding:4px 6px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  color:var(--muted);
+}
 
-    /* Mermaid SVG sizing */
-    .mermaid svg{
-      max-width:100% !important;
-      height:auto !important;
-      display:block;
-    }
+.mermaid-wrap{
+  padding:4px;
+}
 
-    /* Reduz o tamanho do texto do diagrama */
-    .mermaid svg text{
-      font-size: 11px !important; /* ↓ deixa mais “zoom out” */
-    }
+.mermaid svg{
+  max-width:100% !important;
+  height:auto !important;
+}
 
-    /* Reduz um pouco o tamanho das caixas do diagrama */
-    .mermaid svg .node rect,
-    .mermaid svg .node polygon,
-    .mermaid svg .node circle,
-    .mermaid svg .node ellipse{
-      stroke-width: 1px !important;
-    }
+/* deixa o texto do diagrama bem menor */
+.mermaid svg text{
+  font-size:9px !important;
+}
 
-    /* Mobile ainda mais compacto */
-    @media (max-width: 520px){
-      header{ padding:14px 12px 6px; }
-      main{ padding:10px 12px 16px; gap:8px; }
-      .card{ padding:10px; border-radius:12px; }
-      .mermaid-wrap{ padding:7px; }
-      .mermaid svg text{ font-size: 10px !important; }
-    }
-  </style>
+/* diminui espessura das linhas */
+.mermaid svg path{
+  stroke-width:1px !important;
+}
+</style>
 
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
 
 <body>
 
 <header>
-  <h1>Fluxograma — Troca de Mercadoria</h1>
-  <p>Processo de produto vencido, avariado ou perda.</p>
+<h1>Fluxograma — Troca Mercadoria</h1>
+<p>Vencido | Avariado | Perda</p>
 </header>
 
 <main>
 
 <section class="card">
-  <div class="row">
-    <div class="badge"><span class="dot"></span> Fluxo Geral</div>
-    <div class="badge"><span class="dot warn"></span> Decisão fornecedor</div>
-  </div>
-
-  <div class="mermaid-wrap">
-    <div class="mermaid">
+<div class="row">
+<div class="badge">Fluxo Geral</div>
+</div>
+<div class="mermaid-wrap">
+<div class="mermaid">
 flowchart TD
-A([Inicio]) --> B[Produto identificado com problema]
-B --> C{Qual o tipo}
-C -->|Vencido| D[Ir para fluxo vencido]
-C -->|Avariado| E[Ir para fluxo avariado]
-C -->|Perda| F[Ir para fluxo perda]
+A([Inicio]) --> B[Produto problema]
+B --> C{Tipo}
+C -->|Vencido| D[Fluxo vencido]
+C -->|Avariado| E[Fluxo avariado]
+C -->|Perda| F[Fluxo perda]
 D --> Z([Fim])
 E --> Z
 F --> Z
-    </div>
-  </div>
+</div>
+</div>
 </section>
 
 <section class="card">
-  <div class="row">
-    <div class="badge"><span class="dot"></span> Fluxo Produto Vencido</div>
-  </div>
-
-  <div class="mermaid-wrap">
-    <div class="mermaid">
+<div class="row"><div class="badge">Vencido</div></div>
+<div class="mermaid-wrap">
+<div class="mermaid">
 flowchart TD
-A([Inicio]) --> B[Produto vencido identificado]
-B --> C[Registrar no sistema e separar estoque avaria]
-C --> D{Fornecedor aceita troca}
+A([Inicio]) --> B[Produto vencido]
+B --> C[Registrar e separar]
+C --> D{Fornecedor troca}
 
-D -->|Sim| E[Emitir nota devolucao]
-E --> F[Enviar relatorio fornecedor]
-F --> G[Receber produto novo]
-G --> H[Lancar entrada centro custo]
+D -->|Sim| E[Emitir nota]
+E --> F[Enviar relatorio]
+F --> G[Receber novo]
+G --> H[Lancar entrada]
 H --> Z([Fim])
 
-D -->|Nao| I[Lancar como perda centro custo]
-I --> J[Descartar conforme politica]
+D -->|Nao| I[Lancar perda]
+I --> J[Descartar]
 J --> Z
-    </div>
-  </div>
+</div>
+</div>
 </section>
 
 <section class="card">
-  <div class="row">
-    <div class="badge"><span class="dot"></span> Fluxo Produto Avariado</div>
-  </div>
-
-  <div class="mermaid-wrap">
-    <div class="mermaid">
+<div class="row"><div class="badge">Avariado</div></div>
+<div class="mermaid-wrap">
+<div class="mermaid">
 flowchart TD
-A([Inicio]) --> B[Produto avariado identificado]
-B --> C[Registrar no sistema e separar estoque avaria]
-C --> D{Fornecedor aceita troca}
+A([Inicio]) --> B[Produto avariado]
+B --> C[Registrar e separar]
+C --> D{Fornecedor troca}
 
-D -->|Sim| E[Emitir nota devolucao]
-E --> F[Enviar relatorio fornecedor]
-F --> G[Receber produto novo]
-G --> H[Lancar entrada centro custo]
+D -->|Sim| E[Emitir nota]
+E --> F[Enviar relatorio]
+F --> G[Receber novo]
+G --> H[Lancar entrada]
 H --> Z([Fim])
 
-D -->|Nao| I[Lancar perda centro custo]
-I --> J[Descartar conforme politica]
+D -->|Nao| I[Lancar perda]
+I --> J[Descartar]
 J --> Z
-    </div>
-  </div>
+</div>
+</div>
 </section>
 
 <section class="card">
-  <div class="row">
-    <div class="badge"><span class="dot"></span> Fluxo Perda</div>
-  </div>
-
-  <div class="mermaid-wrap">
-    <div class="mermaid">
+<div class="row"><div class="badge">Perda</div></div>
+<div class="mermaid-wrap">
+<div class="mermaid">
 flowchart TD
-A([Inicio]) --> B[Identificacao perda]
-B --> C[Registrar motivo vazamento contaminacao queda]
-C --> D[Lancar centro custo perda]
-D --> E[Descartar conforme politica]
+A([Inicio]) --> B[Identificar perda]
+B --> C[Registrar motivo]
+C --> D[Lancar centro custo]
+D --> E[Descartar]
 E --> Z([Fim])
-    </div>
-  </div>
+</div>
+</div>
 </section>
 
 </main>
 
 <script>
-  mermaid.initialize({
-    startOnLoad: true,
-    theme: "dark",
-    flowchart: { curve: "basis" }
-  });
+mermaid.initialize({
+  startOnLoad:true,
+  theme:"dark",
+  flowchart:{
+    curve:"linear",
+    padding:2,
+    nodeSpacing:20,
+    rankSpacing:20
+  }
+});
 </script>
 
 </body>
