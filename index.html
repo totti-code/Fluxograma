@@ -1,197 +1,333 @@
 <!doctype html>
 <html lang="pt-br">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Fluxograma | Troca | Avaria | Perda</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fluxo Troca | Vencido | Avariado | Perda</title>
 
-<style>
-:root{
-  --bg:#0b1220;
-  --card:#111a2e;
-  --line:#22304f;
-  --text:#eaf2ff;
-  --muted:#a7b7d6;
-  --accent:#4cc9f0;
-}
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111a2e;
+      --line:#22304f;
+      --text:#eaf2ff;
+      --muted:#a7b7d6;
+      --accent:#4cc9f0;
+      --accent2:#ffb703;
+    }
+    *{ box-sizing:border-box; }
 
-*{ box-sizing:border-box; }
+    html, body{
+      height:100%;
+      margin:0;
+      overflow:hidden; /* ✅ sem rolagem na página inteira */
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
 
-body{
-  margin:0;
-  font-family: system-ui, sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
+    .wrap{
+      height:100vh;
+      display:grid;
+      grid-template-rows: auto auto 1fr;
+      gap:6px;
+      padding:10px 10px 10px;
+    }
 
-header{
-  padding:10px 12px 4px;
-  max-width:1200px;
-  margin:auto;
-}
+    header{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:10px;
+      padding:0 2px;
+    }
+    h1{
+      margin:0;
+      font-size:16px;
+      line-height:1.1;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      margin:0;
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.2;
+      text-align:right;
+      white-space:nowrap;
+    }
 
-h1{
-  margin:0;
-  font-size:18px; /* bem menor */
-}
+    /* ===== Tabs (mobile) ===== */
+    .tabs{
+      display:none;
+      gap:6px;
+      flex-wrap:wrap;
+    }
+    .tab{
+      border:1px solid var(--line);
+      background: rgba(17,26,46,.55);
+      color: var(--muted);
+      padding:6px 8px;
+      border-radius:999px;
+      font-size:11px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .tab.active{
+      color: var(--text);
+      border-color: rgba(76,201,240,.7);
+      box-shadow: 0 0 0 2px rgba(76,201,240,.12) inset;
+    }
 
-p{
-  margin:2px 0 0;
-  font-size:11px;
-  color:var(--muted);
-}
+    /* ===== 3 colunas ===== */
+    .grid{
+      height:100%;
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:8px;
+      min-height:0; /* importante pra não forçar overflow */
+    }
 
-main{
-  max-width:1200px;
-  margin:auto;
-  padding:6px 12px 12px;
-  display:grid;
-  gap:6px;
-}
+    .card{
+      height:100%;
+      min-height:0;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
+      padding:8px;
+      display:grid;
+      grid-template-rows: auto 1fr;
+      gap:6px;
+      overflow:hidden; /* ✅ sem rolagem dentro do card */
+    }
 
-.card{
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:6px; /* mínimo */
-}
+    .cardTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:4px 7px;
+      font-size:10px;
+      color:var(--muted);
+      background: rgba(17,26,46,.55);
+      line-height:1;
+      white-space:nowrap;
+    }
+    .dot{ width:8px; height:8px; border-radius:50%; background: var(--accent); }
+    .dot.warn{ background: var(--accent2); }
 
-.row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:4px;
-}
+    /* Área do diagrama (tem que poder medir e dar fit) */
+    .mermaidBox{
+      height:100%;
+      min-height:0;
+      border:1px dashed rgba(167,183,214,.20);
+      border-radius:10px;
+      background: rgba(10,16,30,.25);
+      padding:6px;
+      overflow:hidden;
+      position:relative;
+    }
 
-.badge{
-  font-size:10px;
-  padding:4px 6px;
-  border:1px solid var(--line);
-  border-radius:999px;
-  color:var(--muted);
-}
+    /* Mermaid render */
+    .mermaid{
+      height:100%;
+      width:100%;
+    }
+    .mermaid svg{
+      display:block;
+      width:auto;
+      height:auto;
+      max-width:none !important; /* vamos controlar por transform */
+      max-height:none !important;
+    }
 
-.mermaid-wrap{
-  padding:4px;
-}
+    /* Textos menores no SVG */
+    .mermaid svg text{ font-size: 9px !important; }
 
-.mermaid svg{
-  max-width:100% !important;
-  height:auto !important;
-}
+    /* ===== Mobile: vira “páginas” sem rolar ===== */
+    @media (max-width: 980px){
+      .tabs{ display:flex; }
+      .grid{ grid-template-columns: 1fr; }
+      .card{ display:none; }             /* só 1 por vez */
+      .card.active{ display:grid; }
+      .subtitle{ display:none; }
+    }
+  </style>
 
-/* deixa o texto do diagrama bem menor */
-.mermaid svg text{
-  font-size:9px !important;
-}
-
-/* diminui espessura das linhas */
-.mermaid svg path{
-  stroke-width:1px !important;
-}
-</style>
-
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
-
 <body>
 
-<header>
-<h1>Fluxograma — Troca Mercadoria</h1>
-<p>Vencido | Avariado | Perda</p>
-</header>
+<div class="wrap">
+  <header>
+    <h1>Fluxo — Troca / Avaria / Perda</h1>
+    <p class="subtitle">Sem rolagem • Auto-zoom do diagrama</p>
+  </header>
 
-<main>
+  <!-- Tabs só aparecem no mobile -->
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-target="cardVencido">Vencido</button>
+    <button class="tab" data-target="cardAvariado">Avariado</button>
+    <button class="tab" data-target="cardPerda">Perda</button>
+  </div>
 
-<section class="card">
-<div class="row">
-<div class="badge">Fluxo Geral</div>
-</div>
-<div class="mermaid-wrap">
-<div class="mermaid">
-flowchart TD
-A([Inicio]) --> B[Produto problema]
-B --> C{Tipo}
-C -->|Vencido| D[Fluxo vencido]
-C -->|Avariado| E[Fluxo avariado]
-C -->|Perda| F[Fluxo perda]
-D --> Z([Fim])
-E --> Z
-F --> Z
-</div>
-</div>
-</section>
+  <div class="grid" id="grid">
 
-<section class="card">
-<div class="row"><div class="badge">Vencido</div></div>
-<div class="mermaid-wrap">
-<div class="mermaid">
+    <!-- COLUNA 1 -->
+    <section class="card active" id="cardVencido">
+      <div class="cardTop">
+        <div class="badge"><span class="dot"></span> Vencido</div>
+        <div class="badge"><span class="dot warn"></span> Decisão fornecedor</div>
+      </div>
+      <div class="mermaidBox">
+        <div class="mermaid">
 flowchart TD
 A([Inicio]) --> B[Produto vencido]
 B --> C[Registrar e separar]
 C --> D{Fornecedor troca}
-
 D -->|Sim| E[Emitir nota]
 E --> F[Enviar relatorio]
 F --> G[Receber novo]
 G --> H[Lancar entrada]
 H --> Z([Fim])
-
 D -->|Nao| I[Lancar perda]
 I --> J[Descartar]
 J --> Z
-</div>
-</div>
-</section>
+        </div>
+      </div>
+    </section>
 
-<section class="card">
-<div class="row"><div class="badge">Avariado</div></div>
-<div class="mermaid-wrap">
-<div class="mermaid">
+    <!-- COLUNA 2 -->
+    <section class="card" id="cardAvariado">
+      <div class="cardTop">
+        <div class="badge"><span class="dot"></span> Avariado</div>
+        <div class="badge"><span class="dot warn"></span> Decisão fornecedor</div>
+      </div>
+      <div class="mermaidBox">
+        <div class="mermaid">
 flowchart TD
 A([Inicio]) --> B[Produto avariado]
 B --> C[Registrar e separar]
 C --> D{Fornecedor troca}
-
 D -->|Sim| E[Emitir nota]
 E --> F[Enviar relatorio]
 F --> G[Receber novo]
 G --> H[Lancar entrada]
 H --> Z([Fim])
-
 D -->|Nao| I[Lancar perda]
 I --> J[Descartar]
 J --> Z
-</div>
-</div>
-</section>
+        </div>
+      </div>
+    </section>
 
-<section class="card">
-<div class="row"><div class="badge">Perda</div></div>
-<div class="mermaid-wrap">
-<div class="mermaid">
+    <!-- COLUNA 3 -->
+    <section class="card" id="cardPerda">
+      <div class="cardTop">
+        <div class="badge"><span class="dot"></span> Perda</div>
+        <div class="badge"><span class="dot warn"></span> Registro e descarte</div>
+      </div>
+      <div class="mermaidBox">
+        <div class="mermaid">
 flowchart TD
 A([Inicio]) --> B[Identificar perda]
 B --> C[Registrar motivo]
 C --> D[Lancar centro custo]
 D --> E[Descartar]
 E --> Z([Fim])
-</div>
-</div>
-</section>
+        </div>
+      </div>
+    </section>
 
-</main>
+  </div>
+</div>
 
 <script>
-mermaid.initialize({
-  startOnLoad:true,
-  theme:"dark",
-  flowchart:{
-    curve:"linear",
-    padding:2,
-    nodeSpacing:20,
-    rankSpacing:20
+  // Mermaid config: mais “apertado”
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    flowchart: {
+      curve: "linear",
+      nodeSpacing: 18,
+      rankSpacing: 18,
+      padding: 2
+    }
+  });
+
+  function fitAllMermaids(){
+    const boxes = document.querySelectorAll(".mermaidBox");
+    boxes.forEach(box => {
+      const svg = box.querySelector("svg");
+      if(!svg) return;
+
+      // Reset transform pra medir tamanho real
+      svg.style.transform = "none";
+      svg.style.transformOrigin = "top left";
+
+      // Medidas do container
+      const bw = box.clientWidth - 8;  // margem interna
+      const bh = box.clientHeight - 8;
+
+      // Medidas do SVG real
+      const vb = svg.viewBox && svg.viewBox.baseVal ? svg.viewBox.baseVal : null;
+
+      // Se houver viewBox, melhor usar ele
+      let sw, sh;
+      if(vb && vb.width && vb.height){
+        sw = vb.width;
+        sh = vb.height;
+      }else{
+        const r = svg.getBBox();
+        sw = r.width || svg.clientWidth;
+        sh = r.height || svg.clientHeight;
+      }
+
+      if(!sw || !sh || !bw || !bh) return;
+
+      // Escala para caber sem rolagem
+      const scale = Math.min(bw / sw, bh / sh);
+
+      // Aplica "zoom out"
+      svg.style.transform = `scale(${scale})`;
+
+      // Evita que o SVG “empurre” layout
+      svg.style.width = sw + "px";
+      svg.style.height = sh + "px";
+    });
   }
-});
+
+  // Refit depois que o mermaid renderizar
+  // (mermaid render é assíncrono; esse pequeno atraso ajuda)
+  window.addEventListener("load", () => {
+    setTimeout(fitAllMermaids, 120);
+  });
+  window.addEventListener("resize", () => {
+    setTimeout(fitAllMermaids, 60);
+  });
+
+  // Tabs no mobile (vira “páginas” sem rolar)
+  const tabs = document.querySelectorAll(".tab");
+  const cards = document.querySelectorAll(".card");
+  tabs.forEach(t => {
+    t.addEventListener("click", () => {
+      tabs.forEach(x => x.classList.remove("active"));
+      t.classList.add("active");
+      const target = t.dataset.target;
+
+      cards.forEach(c => c.classList.remove("active"));
+      const el = document.getElementById(target);
+      if(el) el.classList.add("active");
+
+      setTimeout(fitAllMermaids, 80);
+    });
+  });
 </script>
 
 </body>
