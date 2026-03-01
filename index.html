@@ -15,7 +15,9 @@
       --accent:#4cc9f0;
       --accent2:#ffb703;
     }
+
     *{ box-sizing:border-box; }
+
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -26,69 +28,103 @@
       color:var(--text);
       min-height:100vh;
     }
+
+    /* ====== MAIS COMPACTO ====== */
     header{
-      padding:28px 18px 10px;
+      padding:16px 14px 6px;   /* ↓ menor */
       max-width:1100px;
       margin:0 auto;
     }
     h1{
-      margin:0 0 6px;
-      font-size: clamp(22px, 2.5vw, 34px);
+      margin:0 0 4px;
+      font-size: clamp(18px, 2vw, 24px); /* ↓ menor */
+      line-height:1.15;
     }
     p{
       margin:0;
       color:var(--muted);
-      line-height:1.4;
+      line-height:1.35;
+      font-size:13px; /* ↓ menor */
     }
+
     main{
       max-width:1100px;
       margin:0 auto;
-      padding:14px 18px 36px;
+      padding:10px 14px 18px; /* ↓ menor */
       display:grid;
-      gap:14px;
+      gap:10px; /* ↓ menor */
     }
+
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
       border:1px solid var(--line);
-      border-radius:18px;
-      padding:16px;
+      border-radius:14px; /* ↓ */
+      padding:12px; /* ↓ */
     }
+
     .row{
       display:flex;
-      gap:10px;
+      gap:8px;
       flex-wrap:wrap;
       align-items:center;
       justify-content:space-between;
-      margin-bottom:10px;
+      margin-bottom:8px; /* ↓ */
     }
+
     .badge{
       display:inline-flex;
       gap:8px;
       align-items:center;
-      padding:8px 10px;
+      padding:6px 9px; /* ↓ */
       border-radius:999px;
       border:1px solid var(--line);
       color:var(--muted);
-      font-size:13px;
+      font-size:12px; /* ↓ */
       background: rgba(17,26,46,.55);
+      line-height:1;
     }
+
     .dot{
-      width:10px; height:10px; border-radius:50%;
+      width:9px; height:9px; border-radius:50%;
       background: var(--accent);
     }
-    .dot.warn{
-      background: var(--accent2);
-    }
+    .dot.warn{ background: var(--accent2); }
+
     .mermaid-wrap{
-      margin-top:8px;
-      border:1px dashed rgba(167,183,214,.25);
-      border-radius:16px;
-      padding:12px;
+      margin-top:6px; /* ↓ */
+      border:1px dashed rgba(167,183,214,.22);
+      border-radius:12px; /* ↓ */
+      padding:8px; /* ↓ */
       background: rgba(10,16,30,.35);
     }
+
+    /* Mermaid SVG sizing */
     .mermaid svg{
       max-width:100% !important;
       height:auto !important;
+      display:block;
+    }
+
+    /* Reduz o tamanho do texto do diagrama */
+    .mermaid svg text{
+      font-size: 11px !important; /* ↓ deixa mais “zoom out” */
+    }
+
+    /* Reduz um pouco o tamanho das caixas do diagrama */
+    .mermaid svg .node rect,
+    .mermaid svg .node polygon,
+    .mermaid svg .node circle,
+    .mermaid svg .node ellipse{
+      stroke-width: 1px !important;
+    }
+
+    /* Mobile ainda mais compacto */
+    @media (max-width: 520px){
+      header{ padding:14px 12px 6px; }
+      main{ padding:10px 12px 16px; gap:8px; }
+      .card{ padding:10px; border-radius:12px; }
+      .mermaid-wrap{ padding:7px; }
+      .mermaid svg text{ font-size: 10px !important; }
     }
   </style>
 
@@ -105,13 +141,13 @@
 <main>
 
 <section class="card">
-<div class="row">
-<div class="badge"><span class="dot"></span> Fluxo Geral</div>
-<div class="badge"><span class="dot warn"></span> Decisão fornecedor</div>
-</div>
+  <div class="row">
+    <div class="badge"><span class="dot"></span> Fluxo Geral</div>
+    <div class="badge"><span class="dot warn"></span> Decisão fornecedor</div>
+  </div>
 
-<div class="mermaid-wrap">
-<div class="mermaid">
+  <div class="mermaid-wrap">
+    <div class="mermaid">
 flowchart TD
 A([Inicio]) --> B[Produto identificado com problema]
 B --> C{Qual o tipo}
@@ -121,17 +157,17 @@ C -->|Perda| F[Ir para fluxo perda]
 D --> Z([Fim])
 E --> Z
 F --> Z
-</div>
-</div>
+    </div>
+  </div>
 </section>
 
 <section class="card">
-<div class="row">
-<div class="badge"><span class="dot"></span> Fluxo Produto Vencido</div>
-</div>
+  <div class="row">
+    <div class="badge"><span class="dot"></span> Fluxo Produto Vencido</div>
+  </div>
 
-<div class="mermaid-wrap">
-<div class="mermaid">
+  <div class="mermaid-wrap">
+    <div class="mermaid">
 flowchart TD
 A([Inicio]) --> B[Produto vencido identificado]
 B --> C[Registrar no sistema e separar estoque avaria]
@@ -146,17 +182,17 @@ H --> Z([Fim])
 D -->|Nao| I[Lancar como perda centro custo]
 I --> J[Descartar conforme politica]
 J --> Z
-</div>
-</div>
+    </div>
+  </div>
 </section>
 
 <section class="card">
-<div class="row">
-<div class="badge"><span class="dot"></span> Fluxo Produto Avariado</div>
-</div>
+  <div class="row">
+    <div class="badge"><span class="dot"></span> Fluxo Produto Avariado</div>
+  </div>
 
-<div class="mermaid-wrap">
-<div class="mermaid">
+  <div class="mermaid-wrap">
+    <div class="mermaid">
 flowchart TD
 A([Inicio]) --> B[Produto avariado identificado]
 B --> C[Registrar no sistema e separar estoque avaria]
@@ -171,34 +207,35 @@ H --> Z([Fim])
 D -->|Nao| I[Lancar perda centro custo]
 I --> J[Descartar conforme politica]
 J --> Z
-</div>
-</div>
+    </div>
+  </div>
 </section>
 
 <section class="card">
-<div class="row">
-<div class="badge"><span class="dot"></span> Fluxo Perda</div>
-</div>
+  <div class="row">
+    <div class="badge"><span class="dot"></span> Fluxo Perda</div>
+  </div>
 
-<div class="mermaid-wrap">
-<div class="mermaid">
+  <div class="mermaid-wrap">
+    <div class="mermaid">
 flowchart TD
 A([Inicio]) --> B[Identificacao perda]
 B --> C[Registrar motivo vazamento contaminacao queda]
 C --> D[Lancar centro custo perda]
 D --> E[Descartar conforme politica]
 E --> Z([Fim])
-</div>
-</div>
+    </div>
+  </div>
 </section>
 
 </main>
 
 <script>
-mermaid.initialize({
-startOnLoad: true,
-theme: "dark"
-});
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    flowchart: { curve: "basis" }
+  });
 </script>
 
 </body>
