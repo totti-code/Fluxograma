@@ -20,7 +20,7 @@
     html, body{
       height:100%;
       margin:0;
-      overflow:hidden; /* ✅ sem rolagem na página inteira */
+      overflow:hidden; /* ✅ sem rolagem */
       background: var(--bg);
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -29,39 +29,31 @@
     .wrap{
       height:100vh;
       display:grid;
-      grid-template-rows: auto auto 1fr;
+      grid-template-rows:auto auto 1fr;
       gap:6px;
-      padding:10px 10px 10px;
+      padding:10px;
     }
 
     header{
       display:flex;
-      align-items:baseline;
+      align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding:0 2px;
     }
     h1{
       margin:0;
-      font-size:16px;
+      font-size:15px;
       line-height:1.1;
-      letter-spacing:.2px;
     }
     .subtitle{
       margin:0;
       font-size:11px;
       color:var(--muted);
-      line-height:1.2;
-      text-align:right;
       white-space:nowrap;
     }
 
     /* ===== Tabs (mobile) ===== */
-    .tabs{
-      display:none;
-      gap:6px;
-      flex-wrap:wrap;
-    }
+    .tabs{ display:none; gap:6px; flex-wrap:wrap; }
     .tab{
       border:1px solid var(--line);
       background: rgba(17,26,46,.55);
@@ -82,9 +74,9 @@
     .grid{
       height:100%;
       display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns:1fr 1fr 1fr;
       gap:8px;
-      min-height:0; /* importante pra não forçar overflow */
+      min-height:0;
     }
 
     .card{
@@ -95,9 +87,9 @@
       background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
       padding:8px;
       display:grid;
-      grid-template-rows: auto 1fr;
+      grid-template-rows:auto 1fr;
       gap:6px;
-      overflow:hidden; /* ✅ sem rolagem dentro do card */
+      overflow:hidden;
     }
 
     .cardTop{
@@ -122,7 +114,7 @@
     .dot{ width:8px; height:8px; border-radius:50%; background: var(--accent); }
     .dot.warn{ background: var(--accent2); }
 
-    /* Área do diagrama (tem que poder medir e dar fit) */
+    /* área do diagrama */
     .mermaidBox{
       height:100%;
       min-height:0;
@@ -131,30 +123,27 @@
       background: rgba(10,16,30,.25);
       padding:6px;
       overflow:hidden;
-      position:relative;
     }
 
-    /* Mermaid render */
     .mermaid{
       height:100%;
       width:100%;
     }
+
+    /* ✅ o SVG agora encaixa 100% sem cortar */
     .mermaid svg{
+      width:100% !important;
+      height:100% !important;
+      max-width:100% !important;
+      max-height:100% !important;
       display:block;
-      width:auto;
-      height:auto;
-      max-width:none !important; /* vamos controlar por transform */
-      max-height:none !important;
     }
 
-    /* Textos menores no SVG */
-    .mermaid svg text{ font-size: 9px !important; }
-
-    /* ===== Mobile: vira “páginas” sem rolar ===== */
+    /* mobile: “páginas” (sem rolagem) */
     @media (max-width: 980px){
       .tabs{ display:flex; }
-      .grid{ grid-template-columns: 1fr; }
-      .card{ display:none; }             /* só 1 por vez */
+      .grid{ grid-template-columns:1fr; }
+      .card{ display:none; }
       .card.active{ display:grid; }
       .subtitle{ display:none; }
     }
@@ -167,10 +156,9 @@
 <div class="wrap">
   <header>
     <h1>Fluxo — Troca / Avaria / Perda</h1>
-    <p class="subtitle">Sem rolagem • Auto-zoom do diagrama</p>
+    <p class="subtitle">Sem rolagem • Tudo encaixado</p>
   </header>
 
-  <!-- Tabs só aparecem no mobile -->
   <div class="tabs" id="tabs">
     <button class="tab active" data-target="cardVencido">Vencido</button>
     <button class="tab" data-target="cardAvariado">Avariado</button>
@@ -179,7 +167,7 @@
 
   <div class="grid" id="grid">
 
-    <!-- COLUNA 1 -->
+    <!-- VENCIDO -->
     <section class="card active" id="cardVencido">
       <div class="cardTop">
         <div class="badge"><span class="dot"></span> Vencido</div>
@@ -203,7 +191,7 @@ J --> Z
       </div>
     </section>
 
-    <!-- COLUNA 2 -->
+    <!-- AVARIADO -->
     <section class="card" id="cardAvariado">
       <div class="cardTop">
         <div class="badge"><span class="dot"></span> Avariado</div>
@@ -227,7 +215,7 @@ J --> Z
       </div>
     </section>
 
-    <!-- COLUNA 3 -->
+    <!-- PERDA -->
     <section class="card" id="cardPerda">
       <div class="cardTop">
         <div class="badge"><span class="dot"></span> Perda</div>
@@ -249,70 +237,51 @@ E --> Z([Fim])
 </div>
 
 <script>
-  // Mermaid config: mais “apertado”
+  // ✅ deixa o diagrama MENOR de verdade (fonte e padding do mermaid)
   mermaid.initialize({
     startOnLoad: true,
     theme: "dark",
     flowchart: {
       curve: "linear",
-      nodeSpacing: 18,
-      rankSpacing: 18,
+      nodeSpacing: 10,
+      rankSpacing: 10,
       padding: 2
+    },
+    themeVariables: {
+      fontSize: "9px",
+      nodePadding: 6
     }
   });
 
-  function fitAllMermaids(){
-    const boxes = document.querySelectorAll(".mermaidBox");
-    boxes.forEach(box => {
-      const svg = box.querySelector("svg");
-      if(!svg) return;
+  // ✅ garante que o SVG encaixe sem cortar (viewBox + preserveAspectRatio)
+  function fixMermaidSvgs(){
+    document.querySelectorAll(".mermaidBox svg").forEach(svg => {
+      // força encaixe
+      svg.setAttribute("width","100%");
+      svg.setAttribute("height","100%");
+      svg.setAttribute("preserveAspectRatio","xMidYMid meet");
 
-      // Reset transform pra medir tamanho real
-      svg.style.transform = "none";
-      svg.style.transformOrigin = "top left";
-
-      // Medidas do container
-      const bw = box.clientWidth - 8;  // margem interna
-      const bh = box.clientHeight - 8;
-
-      // Medidas do SVG real
-      const vb = svg.viewBox && svg.viewBox.baseVal ? svg.viewBox.baseVal : null;
-
-      // Se houver viewBox, melhor usar ele
-      let sw, sh;
-      if(vb && vb.width && vb.height){
-        sw = vb.width;
-        sh = vb.height;
-      }else{
-        const r = svg.getBBox();
-        sw = r.width || svg.clientWidth;
-        sh = r.height || svg.clientHeight;
+      // se o mermaid não colocar viewBox certo, cria um baseado no BBox
+      if(!svg.getAttribute("viewBox")){
+        const b = svg.getBBox();
+        const pad = 10;
+        const x = Math.floor(b.x - pad);
+        const y = Math.floor(b.y - pad);
+        const w = Math.ceil(b.width + pad*2);
+        const h = Math.ceil(b.height + pad*2);
+        svg.setAttribute("viewBox", `${x} ${y} ${w} ${h}`);
       }
-
-      if(!sw || !sh || !bw || !bh) return;
-
-      // Escala para caber sem rolagem
-      const scale = Math.min(bw / sw, bh / sh);
-
-      // Aplica "zoom out"
-      svg.style.transform = `scale(${scale})`;
-
-      // Evita que o SVG “empurre” layout
-      svg.style.width = sw + "px";
-      svg.style.height = sh + "px";
     });
   }
 
-  // Refit depois que o mermaid renderizar
-  // (mermaid render é assíncrono; esse pequeno atraso ajuda)
   window.addEventListener("load", () => {
-    setTimeout(fitAllMermaids, 120);
+    setTimeout(fixMermaidSvgs, 120);
   });
   window.addEventListener("resize", () => {
-    setTimeout(fitAllMermaids, 60);
+    setTimeout(fixMermaidSvgs, 80);
   });
 
-  // Tabs no mobile (vira “páginas” sem rolar)
+  // Tabs mobile
   const tabs = document.querySelectorAll(".tab");
   const cards = document.querySelectorAll(".card");
   tabs.forEach(t => {
@@ -325,7 +294,7 @@ E --> Z([Fim])
       const el = document.getElementById(target);
       if(el) el.classList.add("active");
 
-      setTimeout(fitAllMermaids, 80);
+      setTimeout(fixMermaidSvgs, 80);
     });
   });
 </script>
